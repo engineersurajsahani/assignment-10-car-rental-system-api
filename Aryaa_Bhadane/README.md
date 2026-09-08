@@ -239,28 +239,8 @@ Server will run on `http://localhost:5000`.
 
 ---
 
-## ☁️ Deploying to Render
 
-1. **Supabase Configuration**:
-   - Copy `SUPABASE_URL` and `SUPABASE_ANON_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`) from **Supabase Dashboard ➔ Project Settings ➔ API**.
-   - Execute the SQL migration script in Supabase SQL Editor.
-   - Under **Authentication ➔ URL Configuration**, add your Render service URL (e.g., `https://your-app-name.onrender.com`) to **Redirect URLs**.
 
-2. **Render Web Service Setup**:
-   - Sign in to [render.com](https://render.com) and click **New ➔ Web Service**.
-   - Connect your GitHub repository.
-   - Set **Root Directory**: `Aryaa_Bhadane`.
-   - **Environment**: `Node`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-   - **Instance Type**: `Free`
 
-3. **Add Environment Variables in Render**:
-   - `SUPABASE_URL`: `https://your-project.supabase.co`
-   - `SUPABASE_ANON_KEY`: `your-anon-key`
-   - `SUPABASE_SERVICE_ROLE_KEY`: `your-service-role-key` (optional/recommended for admin actions)
-   - Note: Do not set `PORT` manually — Render injects it automatically and `server.js` dynamically reads `process.env.PORT`.
 
-4. **Verify Deployment**:
-   - Send a `GET https://your-app-name.onrender.com/api/vehicles` request.
-   - Update `{{baseUrl}}` in Postman to test live endpoints.
+DEPLOYMENT LINK: https://assignment-10-car-rental-system-api-99vr.onrender.com/

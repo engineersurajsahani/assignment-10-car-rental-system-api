@@ -1,0 +1,260 @@
+{
+  "info": {
+    "_postman_id": "c1a0100a-car-rental-api-prince-yadav",
+    "name": "Assignment 10: Car Rental & Fleet Booking API (Prince Yadav 150096725032)",
+    "description": "Comprehensive Postman test collection for Car Rental & Vehicle Fleet Management API with Supabase Auth, Date Collision Prevention, and Automated Billing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Supabase Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"David Miller\",\n  \"email\": \"driver@travel.com\",\n  \"password\": \"mypassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "    console.log('Saved token:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"driver@travel.com\",\n  \"password\": \"mypassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Vehicle Fleet Management",
+      "item": [
+        {
+          "name": "Fetch All Vehicles (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Filter Vehicles by Category and Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles?category=SUV&status=available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"],
+              "query": [
+                { "key": "category", "value": "SUV" },
+                { "key": "status", "value": "available" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle Details with Past Rentals (Join)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add New Vehicle to Fleet (Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"Tesla\",\n  \"model\": \"Model 3\",\n  \"year\": 2024,\n  \"category\": \"Electric\",\n  \"daily_rate\": 4500,\n  \"fuel_type\": \"EV\",\n  \"seating_capacity\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Update Vehicle Rate / Status (Auth)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"daily_rate\": 4800,\n  \"status\": \"maintenance\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Vehicle (Auth)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Rental & Booking Operations",
+      "item": [
+        {
+          "name": "Book Vehicle #1 (2026-05-01 to 2026-05-05) [Success 201]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": 1,\n  \"start_date\": \"2026-05-01\",\n  \"end_date\": \"2026-05-05\",\n  \"customer_name\": \"David\",\n  \"customer_email\": \"david@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals"]
+            }
+          }
+        },
+        {
+          "name": "TEST DATE COLLISION: Book Vehicle #1 (2026-05-03 to 2026-05-07) [Rejected 400]",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": 1,\n  \"start_date\": \"2026-05-03\",\n  \"end_date\": \"2026-05-07\",\n  \"customer_name\": \"David\",\n  \"customer_email\": \"david@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals"]
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings (Auth)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/my-bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "my-bookings"]
+            }
+          }
+        },
+        {
+          "name": "Complete Rental / Return Vehicle (Auth)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/1/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "1", "complete"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Upcoming Rental (Auth)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/1/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

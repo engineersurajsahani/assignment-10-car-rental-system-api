@@ -2,8 +2,9 @@
 
 **ITM Assignment 10 — Backend Development Track**  
 **Student Name:** Prince Yadav  
-**Student Roll / Registration No:** `150096725032`  
-**GitHub Repository Name:** `itm-assignment-10-car-rental-api`  
+**Roll No:** `150096725032`  
+**Live Render API Deployment:** [https://assignment-10-car-rental-system-api-lbt6.onrender.com](https://assignment-10-car-rental-system-api-lbt6.onrender.com)  
+**GitHub Repository:** [https://github.com/2025prince-control/assignment-10-car-rental-system-api](https://github.com/2025prince-control/assignment-10-car-rental-system-api)  
 **Tech Stack:** Node.js, Express.js, Supabase (PostgreSQL Cloud DB & Auth), dotenv, cors  
 
 ---

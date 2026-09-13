@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:5000",
+      "value": "https://assignment-10-car-rental-system-api-lbt6.onrender.com",
       "type": "string"
     },
     {

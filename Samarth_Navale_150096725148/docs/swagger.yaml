@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Car Rental & Fleet Management API
+  version: 1.0.0
+  description: Supabase powered Car Rental and Vehicle Fleet Management API
+paths:
+  /api/auth/register:
+    post:
+      summary: Register customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: User registered successfully
+  /api/auth/login:
+    post:
+      summary: Login customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+  /api/vehicles:
+    get:
+      summary: Get all vehicles
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of vehicles
+    post:
+      summary: Add vehicle to fleet
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: Vehicle added
+  /api/vehicles/{id}:
+    get:
+      summary: Get vehicle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Vehicle details
+    put:
+      summary: Update vehicle
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Vehicle updated
+    delete:
+      summary: Delete vehicle
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Vehicle deleted
+  /api/rentals:
+    post:
+      summary: Book a vehicle
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: Rental booked
+  /api/rentals/my-bookings:
+    get:
+      summary: Get user bookings
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: User bookings
+  /api/rentals/{id}/cancel:
+    patch:
+      summary: Cancel booking
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Booking cancelled
+  /api/rentals/{id}/complete:
+    patch:
+      summary: Complete booking
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Booking completed
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

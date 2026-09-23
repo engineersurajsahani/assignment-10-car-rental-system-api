@@ -1,4 +1,10 @@
 # 🚗 Assignment 10: Car Rental & Fleet Booking System with Supabase
+
+---
+
+## 🌐 Live Production Deployment on Render
+- **Live Production URL:** [https://assignmentsexpressjsmongodbsupabasefireb-kncn.onrender.com](https://assignmentsexpressjsmongodbsupabasefireb-kncn.onrender.com)
+
 > **Track:** Backend Development | **Level:** Intermediate | **Estimated Time:** 6–8 Hours  
 > **Tech Stack:** Node.js, Express.js, Supabase (PostgreSQL Cloud DB & Auth), dotenv, cors
 

@@ -1,0 +1,10 @@
+const express = require('express');
+const auth = require('../middleware/auth');
+const { getVehicles, getVehicleById, createVehicle, updateVehicle, deleteVehicle } = require('../controllers/vehicleController');
+const router = express.Router();
+router.get('/', getVehicles);
+router.get('/:id', getVehicleById);
+router.post('/', auth, createVehicle);
+router.put('/:id', auth, updateVehicle);
+router.delete('/:id', auth, deleteVehicle);
+module.exports = router;

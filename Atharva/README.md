@@ -1,29 +1,116 @@
-# Car Rental & Fleet Booking API
+# 🚗 Car Rental & Fleet Booking System API
 
-This is the solution for Assignment 10: Car Rental & Fleet Booking System using Supabase.
+RESTful Car Rental & Fleet Management API using Node.js, Express.js, Supabase PostgreSQL, Supabase Auth, dotenv and CORS.
 
-## Setup Instructions
+## 🌐 Live Deployment
 
-1. **Database Setup**
-   Log into your Supabase project. Open the SQL Editor and execute the contents of `supabase_schema.sql` to create the `vehicles` and `rentals` tables.
+https://assignment-10-car-rental-system-api-z0ho.onrender.com
 
-2. **Environment Variables**
-   Copy `.env.example` to `.env` and fill in your `SUPABASE_URL` and `SUPABASE_ANON_KEY` from your Supabase project API settings.
-   ```bash
-   cp .env.example .env
-   ```
+## 🛠️ Tech Stack
 
-3. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+* Node.js
+* Express.js
+* Supabase PostgreSQL
+* Supabase Authentication
+* dotenv
+* CORS
 
-4. **Start the Application**
-   ```bash
-   npm run dev
-   ```
+## ✨ Features
 
-## API Highlights
-- Uses **Supabase Auth** for registration, login, and bearer token protection on sensitive routes.
-- Includes complex **date overlap SQL logic** executed via Supabase Javascript Client `or()` syntax to prevent double booking.
-- Calculates automated billing for a given `start_date` and `end_date` using native JavaScript date logic, multiplying the days by the `daily_rate`.
+* Customer registration and login
+* Supabase JWT authentication
+* Vehicle fleet management
+* Add, update and delete vehicles
+* Vehicle category and availability filtering
+* Rental booking system
+* Date-range collision prevention
+* Automatic rental cost calculation
+* Customer booking history
+* Cancel upcoming rentals
+* Complete rentals and update vehicle availability
+* PostgreSQL foreign key relationships
+* Centralized error handling
+
+## 👥 Authentication
+
+Protected routes use the Supabase Bearer token.
+
+| Role     | Access                                                               |
+| -------- | -------------------------------------------------------------------- |
+| Customer | View vehicles, book vehicles, view bookings, cancel/complete rentals |
+| Admin    | Add, update and delete vehicles                                      |
+
+## 📌 Main API Routes
+
+### Authentication
+
+| Method | Route                |
+| ------ | -------------------- |
+| POST   | `/api/auth/register` |
+| POST   | `/api/auth/login`    |
+
+### Vehicles
+
+| Method | Route               |
+| ------ | ------------------- |
+| GET    | `/api/vehicles`     |
+| GET    | `/api/vehicles/:id` |
+| POST   | `/api/vehicles`     |
+| PUT    | `/api/vehicles/:id` |
+| DELETE | `/api/vehicles/:id` |
+
+### Rentals
+
+| Method | Route                       |
+| ------ | --------------------------- |
+| POST   | `/api/rentals`              |
+| GET    | `/api/rentals/my-bookings`  |
+| PATCH  | `/api/rentals/:id/cancel`   |
+| PATCH  | `/api/rentals/:id/complete` |
+
+## 🗄️ Database
+
+Supabase PostgreSQL with:
+
+* `vehicles` table
+* `rentals` table
+* Foreign key relationship between rentals and vehicles
+* Rental date validation
+* Vehicle status management
+
+## 💰 Rental Calculation
+
+Rental cost is calculated automatically based on:
+
+`Number of rental days × Daily rate`
+
+The API also checks overlapping rental dates to prevent double-booking.
+
+## 📁 Project Structure
+
+```text
+assignment-10-car-rental-api/
+├── config/
+├── controllers/
+├── middleware/
+├── routes/
+├── .env
+├── .gitignore
+├── package.json
+├── server.js
+└── README.md
+```
+
+## 🧪 Testing
+
+* Register and login a customer
+* Add vehicles to the fleet
+* Create a rental booking
+* Test overlapping dates for the same vehicle
+* Check automatic rental cost calculation
+* Cancel an upcoming booking
+* Complete a rental and verify vehicle availability
+
+---
+
+### Assignment 10 – Car Rental & Fleet Booking System with Supabase

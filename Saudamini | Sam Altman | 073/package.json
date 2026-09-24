@@ -1,0 +1,23 @@
+{
+  "name": "assignment-10-car-rental-api",
+  "version": "1.0.0",
+  "description": "Car Rental & Vehicle Fleet Management API with Supabase by Raj Rasal (150096725066)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "keywords": ["express", "supabase", "postgresql", "car-rental", "api"],
+  "author": "Raj Rasal (150096725066)",
+  "license": "ISC"
+}

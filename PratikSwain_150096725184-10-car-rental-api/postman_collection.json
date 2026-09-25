@@ -1,0 +1,534 @@
+{
+  "info": {
+    "_postman_id": "c9284218-e39d-4e9b-b0dc-car-rental-api-v1",
+    "name": "Car Rental & Fleet Booking System API",
+    "description": "Production REST API collection for Car Rental & Fleet Booking System with Supabase Auth, Fleet Management, Collision Detection, and Booking Lifecycle.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vehicleId1",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "vehicleId2",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "rentalId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alex.driver@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"name\": \"Alex Driver\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Registers a new customer user account in Supabase Auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Login Customer (Sets {{accessToken}})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.access_token) {",
+                  "    pm.collectionVariables.set('accessToken', res.data.access_token);",
+                  "    console.log('Access token successfully saved to collection variable!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alex.driver@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Logs in user and automatically populates {{accessToken}} collection variable."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Vehicles (Fleet Management)",
+      "item": [
+        {
+          "name": "Get All Vehicles (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            },
+            "description": "Lists all fleet vehicles."
+          },
+          "response": []
+        },
+        {
+          "name": "Filter Vehicles (?category=SUV&status=available)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles?category=SUV&status=available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "SUV"
+                },
+                {
+                  "key": "status",
+                  "value": "available"
+                }
+              ]
+            },
+            "description": "Filters vehicles by category and current status."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vehicle by ID with Rental History (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId1}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId1}}"]
+            },
+            "description": "Fetches vehicle specs and nested list of past/current rental history."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle #1 (Electric - Tesla Model 3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('vehicleId1', res.data.id.toString());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"Tesla\",\n  \"model\": \"Model 3\",\n  \"year\": 2024,\n  \"category\": \"Electric\",\n  \"daily_rate\": 85.00,\n  \"fuel_type\": \"Electric\",\n  \"seating_capacity\": 5,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            },
+            "description": "Inserts Vehicle #1 into fleet."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle #2 (SUV - Toyota RAV4)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('vehicleId2', res.data.id.toString());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"Toyota\",\n  \"model\": \"RAV4 Hybrid\",\n  \"year\": 2023,\n  \"category\": \"SUV\",\n  \"daily_rate\": 65.00,\n  \"fuel_type\": \"Hybrid\",\n  \"seating_capacity\": 5,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            },
+            "description": "Inserts Vehicle #2 into fleet."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vehicle #3 (Luxury - BMW 5 Series)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"brand\": \"BMW\",\n  \"model\": \"530i Luxury\",\n  \"year\": 2024,\n  \"category\": \"Luxury\",\n  \"daily_rate\": 120.00,\n  \"fuel_type\": \"Gasoline\",\n  \"seating_capacity\": 5,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            },
+            "description": "Inserts Vehicle #3 into fleet."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vehicle Rate & Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"daily_rate\": 89.99,\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId1}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId1}}"]
+            },
+            "description": "Updates rate and status for vehicle."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId2}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId2}}"]
+            },
+            "description": "Deletes a vehicle if no active or historical bookings exist."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Rentals & Collision Verification",
+      "item": [
+        {
+          "name": "Step 1: Book Vehicle #1 (2026-05-01 to 2026-05-05) -> Expect 201 Created",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.id) {",
+                  "    pm.collectionVariables.set('rentalId', res.data.id.toString());",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": {{vehicleId1}},\n  \"customer_name\": \"Alex Driver\",\n  \"customer_email\": \"alex.driver@example.com\",\n  \"start_date\": \"2026-05-01\",\n  \"end_date\": \"2026-05-05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals"]
+            },
+            "description": "Initial successful booking for Vehicle #1."
+          },
+          "response": []
+        },
+        {
+          "name": "Step 2: Collision Test (2026-05-03 to 2026-05-07) -> Expect 400 Conflict",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": {{vehicleId1}},\n  \"customer_name\": \"Sam Taylor\",\n  \"customer_email\": \"sam.taylor@example.com\",\n  \"start_date\": \"2026-05-03\",\n  \"end_date\": \"2026-05-07\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals"]
+            },
+            "description": "Attempts overlapping booking during reserved window. Must return 400 Bad Request with 'Vehicle already reserved during this timeframe'."
+          },
+          "response": []
+        },
+        {
+          "name": "Step 3: Non-Overlapping Booking (2026-05-10 to 2026-05-15) -> Expect 201 Created",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": {{vehicleId1}},\n  \"customer_name\": \"Alex Driver\",\n  \"customer_email\": \"alex.driver@example.com\",\n  \"start_date\": \"2026-05-10\",\n  \"end_date\": \"2026-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals"]
+            },
+            "description": "Book a clean, non-overlapping future window for Vehicle #1."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/my-bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "my-bookings"]
+            },
+            "description": "Returns current authenticated customer's rental history joined with vehicle details."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/{{rentalId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "{{rentalId}}", "cancel"]
+            },
+            "description": "Cancels booking if not completed/cancelled and start_date has not passed."
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Booking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/rentals/{{rentalId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rentals", "{{rentalId}}", "complete"]
+            },
+            "description": "Marks rental as completed and restores vehicle status to available."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

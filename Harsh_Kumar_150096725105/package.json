@@ -1,0 +1,30 @@
+{
+  "name": "harsh-assignment-10-car-rental-system-api",
+  "version": "1.0.0",
+  "description": "> **Track:** Backend Development | **Level:** Intermediate | **Estimated Time:** 6–8 Hours   > **Tech Stack:** Node.js, Express.js, Supabase (PostgreSQL Cloud DB & Auth), dotenv, cors",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js", "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harsh4421/Harsh-Assignment-10-Car-Rental-System-Api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/harsh4421/Harsh-Assignment-10-Car-Rental-System-Api/issues"
+  },
+  "homepage": "https://github.com/harsh4421/Harsh-Assignment-10-Car-Rental-System-Api#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
